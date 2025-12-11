@@ -6,7 +6,14 @@ class Poll {
         this.title = title;
         this.totalVotes = 0;
     }
+
+    // KODE BARU UNTUK COMMIT 3/3
+    public void vote() {
+        this.totalVotes++;
+        System.out.println("Suara berhasil ditambahkan ke: " + title);
+    }
 }
+
 class HezekielLogic {
     public static void main(String[] args) {
         // Output sesuai permintaan tugas
