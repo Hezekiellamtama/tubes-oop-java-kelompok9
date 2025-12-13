@@ -33,7 +33,7 @@ Pastikan **Java Development Kit (JDK)** sudah terinstal di sistem Anda.
    ```bash
    git clone [https://github.com/Hezekiellamtama/tubes-oop-java-kelompok9.git](https://github.com/Hezekiellamtama/tubes-oop-java-kelompok9.git)
 
-2. Masuk ke Folder Proyek:
+2. **Masuk ke Folder Proyek:**
     ```bash
     cd tubes-oop-java-kelompok9
    
@@ -41,7 +41,7 @@ Pastikan **Java Development Kit (JDK)** sudah terinstal di sistem Anda.
     ```bash
     javac src/*.java
 
-4. Jalankan Aplikasi:
+4. **Jalankan Aplikasi:**
     ```bash
     java src.Main
 
