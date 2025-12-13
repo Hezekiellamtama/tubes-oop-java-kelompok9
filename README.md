@@ -1,6 +1,6 @@
 # 🗳️ Sistem Voting Sederhana untuk Polling (OOP - Kelompok 9)
 
-Tugas Besar Mata Kuliah Pemrograman Berorientasi Objek (PBO) - Kelompok 9.
+Tugas Besar Mata Kuliah Pemrograman Java Menggunakan Framework - Kelompok 9.
 
 Aplikasi desktop sederhana berbasis **Java Swing** ini menerapkan konsep Object-Oriented Programming (OOP), mencakup Inheritance, Polymorphism, Encapsulation, dan Exception Handling.
 
@@ -31,7 +31,7 @@ Pastikan **Java Development Kit (JDK)** sudah terinstal di sistem Anda.
 
 1. **Clone Repository:**
    ```bash
-   git clone [https://github.com/Hezekiellamtama/tubes-oop-java-kelompok9.git](https://github.com/Hezekiellamtama/tubes-oop-java-kelompok9.git)
+   git clone [https://github.com/Hezekiellamtama/tubes-oop-java-kelompok9.git]
 
 2. **Masuk ke Folder Proyek:**
     ```bash
