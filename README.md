@@ -34,9 +34,15 @@ Pastikan **Java Development Kit (JDK)** sudah terinstal di sistem Anda.
    git clone [https://github.com/Hezekiellamtama/tubes-oop-java-kelompok9.git](https://github.com/Hezekiellamtama/tubes-oop-java-kelompok9.git)
 
 2. Masuk ke Folder Proyek:
-  cd tubes-oop-java-kelompok9
+    ```bash
+    cd tubes-oop-java-kelompok9
    
-3. Compile Kode:
-   javac src/*.java##
+3. **Compile Kode:**
+    ```bash
+    javac src/*.java
+
+4. Jalankan Aplikasi:
+    ```bash
+    java src.Main
 
    
