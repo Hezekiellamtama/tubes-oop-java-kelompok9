@@ -4,7 +4,7 @@ Tugas Besar Mata Kuliah Pemrograman Berorientasi Objek (PBO) - Kelompok 9.
 
 Aplikasi desktop sederhana berbasis **Java Swing** ini menerapkan konsep Object-Oriented Programming (OOP), mencakup Inheritance, Polymorphism, Encapsulation, dan Exception Handling.
 
-## 👥 Anggota Kelompok 9 (Duo Developer)
+## 👥 Anggota Kelompok 9 
 
 | NIM | Nama | Peran |
 | :---: | :--- | :--- |
