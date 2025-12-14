@@ -40,7 +40,7 @@ public class LoginRegisterGUI extends JFrame {
         
         usernameField = new JTextField(15);
         passwordField = new JPasswordField(15);
-        statusLabel = new JLabel("Masukkan kredensial:");
+        statusLabel = new JLabel("Silahkan Login Akun Anda:");
         
         inputPanel.add(new JLabel("Username:"));
         inputPanel.add(usernameField);
@@ -99,7 +99,7 @@ public class LoginRegisterGUI extends JFrame {
                         dispose(); // Tutup jendela login
                         mainApp.startPolling(user); // Panggil method di Main
                     } else {
-                        statusLabel.setText("Login Gagal. Cek kredensial Anda.");
+                        statusLabel.setText("Login Gagal, Anda Belum Terdaftar");
                     }
                 } else {
                     // Logika Registrasi
