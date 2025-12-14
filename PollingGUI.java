@@ -1,127 +1,119 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Map;
 
 public class PollingGUI extends JFrame {
 
-    private Main mainApp;
-    private User currentUser;
-    // PERBAIKAN: Gunakan PollingInterface agar bisa mengakses tampilkanHasil()
-    private PollingInterface polling; 
-    
-    // Komponen GUI
-    private JRadioButton[] voteButtons;
-    private JButton voteButton;
-    private JButton showResultButton;
+    private Main app;
+    private User user;
+    private PollingInterface polling;
+
+    private JButton voteBtn;
+    private JButton hasilBtn;
+    private JButton backBtn;
+    private JRadioButton[] radios;
     private JTextArea hasilArea;
-    private JPanel votePanel;
-    private JScrollPane scrollPane;
-    private JLabel questionLabel;
-    
-    // Konstruktor
-    public PollingGUI(Main app, User user, PollingInterface p) {
-        this.mainApp = app;
-        this.currentUser = user;
-        this.polling = p; 
-        
-        setTitle("Sistem Polling - Selamat Datang, " + currentUser.getUsername());
+
+    public PollingGUI(Main app, User user, PollingInterface polling) {
+        this.app = app;
+        this.user = user;
+        this.polling = polling;
+
+        setTitle("Polling - " + user.getUsername());
+        setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 450);
         setLayout(new BorderLayout(10, 10));
-        
-        setupComponents();
-        addListeners();
-        
-        setLocationRelativeTo(null);
-    }
-    
-    private void setupComponents() {
-        // --- Header dan Pertanyaan ---
-        questionLabel = new JLabel("<html><b>" + polling.getQuestion() + "</b></html>", SwingConstants.CENTER);
+
+        //membuat header
+        JLabel questionLabel = new JLabel(polling.getQuestion(), SwingConstants.CENTER);
+        questionLabel.setFont(new Font("Arial", Font.BOLD, 16));
         add(questionLabel, BorderLayout.NORTH);
-        
-        // --- Panel Pilihan Jawaban (Tengah) ---
-        votePanel = new JPanel();
-        votePanel.setLayout(new BoxLayout(votePanel, BoxLayout.Y_AXIS));
-        
-        Map<String, Integer> options = polling.getOptions();
-        voteButtons = new JRadioButton[options.size()];
+
+        //pilihan
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+
         ButtonGroup group = new ButtonGroup();
-        
+        Map<String, Integer> options = polling.getOptions();
+
+        radios = new JRadioButton[options.size()];
         int i = 0;
         for (String option : options.keySet()) {
-            JRadioButton button = new JRadioButton(option);
-            group.add(button);
-            votePanel.add(button);
-            voteButtons[i] = button;
+            radios[i] = new JRadioButton(option);
+            group.add(radios[i]);
+            centerPanel.add(radios[i]);
             i++;
         }
-        
-        scrollPane = new JScrollPane(votePanel);
-        add(scrollPane, BorderLayout.CENTER);
-        
-        // --- Panel Bawah (Tombol dan Hasil) ---
-        JPanel southPanel = new JPanel(new BorderLayout());
-        
-        // Tombol
-        JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
-        voteButton = new JButton("Submit Pilihan");
-        showResultButton = new JButton("Lihat Hasil Polling");
-        
-        buttonRow.add(voteButton);
-        buttonRow.add(showResultButton);
-        southPanel.add(buttonRow, BorderLayout.NORTH);
-        
-        // Area Hasil
-        hasilArea = new JTextArea("Hasil Polling Akan Ditampilkan di Sini.");
+
+        add(centerPanel, BorderLayout.CENTER);
+
+        // tampilan panel bawah
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+
+        JPanel buttonPanel = new JPanel();
+        voteBtn = new JButton("Vote");
+        hasilBtn = new JButton("Lihat Hasil");
+        backBtn = new JButton("Back");
+
+        buttonPanel.add(voteBtn);
+        buttonPanel.add(hasilBtn);
+        buttonPanel.add(backBtn);
+
+        bottomPanel.add(buttonPanel, BorderLayout.NORTH);
+
+        hasilArea = new JTextArea(5, 30);
         hasilArea.setEditable(false);
-        hasilArea.setRows(5);
-        southPanel.add(new JScrollPane(hasilArea), BorderLayout.SOUTH);
+        bottomPanel.add(new JScrollPane(hasilArea), BorderLayout.CENTER);
 
-        add(southPanel, BorderLayout.SOUTH);
-    }
+        add(bottomPanel, BorderLayout.SOUTH);
 
-    private void addListeners() {
-        // Listener Tombol VOTE
-        voteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selectedOption = null;
-                for (JRadioButton button : voteButtons) {
-                    if (button.isSelected()) {
-                        selectedOption = button.getText();
-                        break;
-                    }
-                }
-                
-                if (selectedOption != null) {
-                    try {
-                        // Memanggil method vote() dari PollingInterface
-                        polling.vote(selectedOption, currentUser);
-                        JOptionPane.showMessageDialog(PollingGUI.this, "Terima kasih! Suara Anda berhasil dicatat.", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                        voteButton.setEnabled(false); // Disable setelah vote pertama
-                        currentUser.setHasVoted(true);
-                    } catch (VoteGandaException ex) {
-                        JOptionPane.showMessageDialog(PollingGUI.this, ex.getMessage(), "Peringatan", JOptionPane.WARNING_MESSAGE);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(PollingGUI.this, "Harap pilih salah satu opsi sebelum submit.", "Error", JOptionPane.ERROR_MESSAGE);
+        //menonaktifkan tombol vote jika sudah voting
+        if (user.getHasVoted()) {
+            voteBtn.setEnabled(false);
+        }
+
+        //aksi tombol vote
+        voteBtn.addActionListener(e -> {
+            String selectedOption = null;
+
+            for (JRadioButton r : radios) {
+                if (r.isSelected()) {
+                    selectedOption = r.getText();
+                    break;
                 }
             }
-        });
-        
-        // Listener Tombol LIHAT HASIL
-        showResultButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // PERBAIKAN: Karena 'polling' sekarang bertipe PollingInterface, method ini bisa diakses
-                String hasilText = polling.tampilkanHasil();
-                hasilArea.setText(hasilText);
+
+            if (selectedOption == null) {
+                JOptionPane.showMessageDialog(this,
+                        "Silakan pilih salah satu opsi!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            try {
+                polling.vote(selectedOption, user);
+                app.getUserManager().markUserVoted(user);
+                voteBtn.setEnabled(false);
+
+                JOptionPane.showMessageDialog(this,
+                        "Terima kasih! Vote Anda berhasil.",
+                        "Sukses",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this,
+                        ex.getMessage(),
+                        "Peringatan",
+                        JOptionPane.WARNING_MESSAGE);
             }
         });
-    }
 
-    // Method main tidak diperlukan di sini
+        hasilBtn.addActionListener(e ->
+                hasilArea.setText(polling.tampilkanHasil())
+        );
+
+        backBtn.addActionListener(e -> app.logout(this));
+
+        setLocationRelativeTo(null);
+    }
 }
