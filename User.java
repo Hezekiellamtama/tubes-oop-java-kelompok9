@@ -1,7 +1,7 @@
 public class User {
     private String username;
     private String password;
-    // PERBAIKAN Poin 4: Field status voting
+    //field status voting
     private boolean hasVoted = false; 
 
     public User(String username, String password) {

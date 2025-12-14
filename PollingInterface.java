@@ -2,12 +2,12 @@ import java.util.Map;
 
 public interface PollingInterface {
     
-    // UBAH BARIS INI:
+    //method vote sekarang menerima argumen User user
     void vote(String selectedOption, User user) throws VoteGandaException; // TAMBAHKAN User user
     
     String tampilkanHasil();
     
-    // Tambahkan method ini jika belum ada
+    //tambahkan method ini jika belum ada
     String getQuestion();
     Map<String, Integer> getOptions();
 }

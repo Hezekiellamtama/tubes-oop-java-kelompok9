@@ -3,42 +3,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    
-    // PERBAIKAN: Deklarasi PollingInterface
+
     private PollingInterface pollingKita; 
     private UserManager userManager;
 
     public Main() {
         this.userManager = new UserManager();
         
-        // Data Polling
-        String pertanyaanPolling = "Siapa yang pantas menjadi Ketua Kelas?";
+        //data Polling
+        String pertanyaanPolling = "Bahasa Pemrograman Favoritmu?";
         List<String> pilihanPolling = new ArrayList<>();
-        pilihanPolling.add("Budi Santoso");
-        pilihanPolling.add("Cinta Laura");
-        pilihanPolling.add("Andi Wijaya");
+        pilihanPolling.add("Java");
+        pilihanPolling.add("C++");
+        pilihanPolling.add("Python");
         
-        // PERBAIKAN: Constructor PollingAnonim sudah menerima argumen
+        // PollingAnonim dibuat sekali
         this.pollingKita = new PollingAnonim(pertanyaanPolling, pilihanPolling);
     }
     
+    //membuka LoginGUI 
     public void startApp() {
-        // Tampilkan jendela Login/Register
         SwingUtilities.invokeLater(() -> {
-            LoginRegisterGUI loginFrame = new LoginRegisterGUI(this.userManager, this);
-            loginFrame.setVisible(true);
+            new LoginGUI(this.userManager, this).setVisible(true);
         });
     }
 
-    // Method yang dipanggil setelah sukses login
+    //method dipanggil setelah login sukses 
     public void startPolling(User userYangLogin) {
+        Main app = this; 
         SwingUtilities.invokeLater(() -> {
-            // PERBAIKAN: Gunakan 'this' (Main) sebagai argumen pertama jika PollingGUI membutuhkan Main
-            // PollingGUI frame = new PollingGUI(this.pollingKita, userYangLogin, userManager); 
-            // ASUMSI PollingGUI butuh (Main app, User user, PollingInterface p)
-            PollingGUI frame = new PollingGUI(this, userYangLogin, this.pollingKita); 
+            PollingGUI frame = new PollingGUI(app, userYangLogin, pollingKita);
             frame.setVisible(true);
         });
+    }
+
+    // method untuk logout 
+    public void logout(JFrame currentFrame) {
+        SwingUtilities.invokeLater(() -> {
+            currentFrame.dispose(); // tutup polling GUI
+            startApp();             // kembali ke login
+        });
+    }
+    public UserManager getUserManager (){
+        return userManager;
     }
 
     public static void main(String[] args) {

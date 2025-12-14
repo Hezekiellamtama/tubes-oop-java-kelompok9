@@ -6,8 +6,7 @@ public class UserManager {
 
     public UserManager() {
         this.users = new ArrayList<>();
-        // Inisialisasi beberapa user untuk testing
-        // users.add(new User("admin", "admin123")); 
+      
     }
 
     public boolean registerUser(String username, String password) {
@@ -38,7 +37,6 @@ public class UserManager {
 
     // Method untuk menandai user sudah vote
     public void markUserVoted(User user) {
-        // PERBAIKAN: Menggunakan method yang benar
         user.setHasVoted(true); 
     }
 }
