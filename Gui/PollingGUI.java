@@ -1,4 +1,9 @@
+package Gui;
 import javax.swing.*;
+import Main.Main;
+import Model.PollingInterface;
+import Model.User;
+import Model.UserManager;
 import java.awt.*;
 import java.util.Map;
 
@@ -107,7 +112,7 @@ public class PollingGUI extends JFrame {
                         JOptionPane.WARNING_MESSAGE);
             }
         });
-
+    
         hasilBtn.addActionListener(e ->
                 hasilArea.setText(polling.tampilkanHasil())
         );

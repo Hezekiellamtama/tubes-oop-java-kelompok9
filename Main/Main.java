@@ -1,7 +1,13 @@
+package Main;
 import javax.swing.*;
+import Gui.LoginGUI;
+import Gui.PollingGUI;
 import java.util.ArrayList;
 import java.util.List;
-
+import Model.UserManager;
+import Model.PollingInterface;
+import Model.PollingAnonim;
+import Model.User;
 public class Main {
 
     private PollingInterface pollingKita; 
