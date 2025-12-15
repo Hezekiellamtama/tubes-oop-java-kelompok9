@@ -1,11 +1,8 @@
 package Gui;
 import javax.swing.*;
+
 import Main.Main;
-import Model.User;
-import Model.UserManager;
-import Model.Polling;
-
-
+import Model.*;
 import java.awt.*;
 
 public class LoginGUI extends JFrame {

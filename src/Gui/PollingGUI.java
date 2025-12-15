@@ -1,9 +1,7 @@
 package Gui;
 import javax.swing.*;
 import Main.Main;
-import Model.PollingInterface;
-import Model.User;
-import Model.UserManager;
+import Model.*;
 import java.awt.*;
 import java.util.Map;
 
