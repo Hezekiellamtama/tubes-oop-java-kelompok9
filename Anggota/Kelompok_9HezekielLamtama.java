@@ -1,3 +1,4 @@
+package Anggota;
 class Poll {
     String title;
     int totalVotes; 
