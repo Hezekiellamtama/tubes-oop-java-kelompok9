@@ -1,13 +1,14 @@
+package src.Model;
 import java.util.Map;
+
+import src.HandleException.VoteGandaException;
 
 public interface PollingInterface {
     
-    // UBAH BARIS INI:
+
     void vote(String selectedOption, User user) throws VoteGandaException; // TAMBAHKAN User user
     
     String tampilkanHasil();
-    
-    // Tambahkan method ini jika belum ada
     String getQuestion();
     Map<String, Integer> getOptions();
 }

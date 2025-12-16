@@ -1,15 +1,19 @@
+package src.Model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import src.HandleException.VoteGandaException;
+
 import java.util.LinkedHashMap;
 
 public abstract class Polling {
     
     private String question;
-    // PERBAIKAN Poin 5: visibility diubah menjadi protected
+    //visibility diubah menjadi protected
     protected Map<String, Integer> options; 
 
-    // Constructor Polling
+    //Constructor Polling
     public Polling(String question, List<String> pilihanList) {
         this.question = question;
         this.options = new LinkedHashMap<>();
@@ -18,10 +22,10 @@ public abstract class Polling {
         }
     }
 
-    // Abstract methods wajib
+    //Abstract methods wajib
     public abstract void vote(String selectedOption, User user) throws VoteGandaException;
     
-    // PERBAIKAN Poin 2: Abstract Getters
+    //Abstract Getters
     public abstract Map<String, Integer> getOptions(); 
     public abstract List<String> getPilihanList();
 

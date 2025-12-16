@@ -1,4 +1,9 @@
+package src.Gui;
 import javax.swing.*;
+
+import src.Main.*;
+import src.Model.*;
+import src.HandleException.*;
 import java.awt.*;
 
 public class LoginGUI extends JFrame {
