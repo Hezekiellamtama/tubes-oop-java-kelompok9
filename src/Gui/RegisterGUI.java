@@ -1,9 +1,8 @@
 package src.Gui;
+
 import javax.swing.*;
-
-import src.Main.Main;
-import src.Model.UserManager;
-
+import src.Main.*;
+import src.Model.*;
 import java.awt.*;
 
 public class RegisterGUI extends JFrame {
@@ -14,7 +13,7 @@ public class RegisterGUI extends JFrame {
     private JTextField namaField;
     private JTextField idVoterField;
     private JTextField umurField;
-    private JTextField passwordField;
+    private JPasswordField passwordField;
     private JRadioButton lakiBtn, perempuanBtn;
 
     public RegisterGUI(UserManager manager, Main app) {
@@ -37,30 +36,31 @@ public class RegisterGUI extends JFrame {
         namaField = new JTextField();
         idVoterField = new JTextField();
         umurField = new JTextField();
-        passwordField = new JTextField();
+        passwordField = new JPasswordField();
 
         lakiBtn = new JRadioButton("Laki-laki");
         perempuanBtn = new JRadioButton("Perempuan");
+
         ButtonGroup genderGroup = new ButtonGroup();
         genderGroup.add(lakiBtn);
         genderGroup.add(perempuanBtn);
 
-        formPanel.add(new JLabel("Nama :"));
+        formPanel.add(new JLabel("Nama:"));
         formPanel.add(namaField);
 
-        formPanel.add(new JLabel("ID Voter :"));
+        formPanel.add(new JLabel("ID Voter:"));
         formPanel.add(idVoterField);
 
-        formPanel.add(new JLabel("Umur :"));
+        formPanel.add(new JLabel("Umur:"));
         formPanel.add(umurField);
 
-        formPanel.add(new JLabel("Jenis Kelamin :"));
+        formPanel.add(new JLabel("Jenis Kelamin:"));
         JPanel genderPanel = new JPanel();
         genderPanel.add(lakiBtn);
         genderPanel.add(perempuanBtn);
         formPanel.add(genderPanel);
 
-        formPanel.add(new JLabel("Password :"));
+        formPanel.add(new JLabel("Password:"));
         formPanel.add(passwordField);
 
         add(formPanel, BorderLayout.CENTER);
@@ -71,40 +71,45 @@ public class RegisterGUI extends JFrame {
 
         buttonPanel.add(registerBtn);
         buttonPanel.add(backBtn);
+
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // === REGISTER ===
+        // REGISTER VOTER
         registerBtn.addActionListener(e -> {
             String idVoter = idVoterField.getText().trim();
-            String password = passwordField.getText().trim();
+            String password = new String(passwordField.getPassword()).trim();
 
             if (idVoter.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(
+                        this,
                         "ID Voter dan Password wajib diisi!",
                         "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.ERROR_MESSAGE
+                );
                 return;
             }
 
-            boolean success = userManager.registerUser(idVoter, password);
+            boolean success = userManager.registerUser(idVoter, password, "VOTER");
 
             if (success) {
-                JOptionPane.showMessageDialog(this,
-                        "Registrasi berhasil! Silakan login.",
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Registrasi berhasil, Silakan login.",
                         "Sukses",
-                        JOptionPane.INFORMATION_MESSAGE);
-
+                        JOptionPane.INFORMATION_MESSAGE
+                );
                 new LoginGUI(userManager, mainApp).setVisible(true);
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this,
-                        "ID Voter sudah terdaftar!",
+                JOptionPane.showMessageDialog(
+                        this,
+                        "ID Voter sudah terdaftar",
                         "Gagal",
-                        JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.ERROR_MESSAGE
+                );
             }
         });
 
-        // === BACK ===
         backBtn.addActionListener(e -> {
             new LoginGUI(userManager, mainApp).setVisible(true);
             dispose();
