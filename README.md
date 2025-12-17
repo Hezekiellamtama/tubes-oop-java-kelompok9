@@ -1,17 +1,17 @@
-# 🗳️ Sistem Voting Sederhana untuk Polling (OOP - Kelompok 9)
+# Sistem Voting Sederhana untuk Polling (OOP - Kelompok 9)
 
 Tugas Besar Mata Kuliah Pemrograman Java Menggunakan Framework - Kelompok 9.
 
 Aplikasi desktop sederhana berbasis **Java Swing** ini menerapkan konsep Object-Oriented Programming (OOP), mencakup Inheritance, Polymorphism, Encapsulation, dan Exception Handling.
 
-## 👥 Anggota Kelompok 9 
+## Anggota Kelompok 9 
 
 | NIM | Nama | Peran |
 | :---: | :--- | :--- |
 | 1324039 | **Hezekiel Berkat Lamtama** | **Ketua - Backend Logic, OOP Core, dan Integrasi Kelas Utama** |
 | 1324043 | Nazwa Maulidina | Frontend Logic, GUI Design (Java Swing), dan Visualisasi Hasil |
 
-## 💡 Fitur Utama
+##  Fitur Utama
 
 ### A. Fitur Inti (Polling Logic)
 1. **Buat Polling:** Menambah pertanyaan (String) dan pilihan voting.
@@ -25,7 +25,7 @@ Aplikasi desktop sederhana berbasis **Java Swing** ini menerapkan konsep Object-
 
 ---
 
- 🚀 Cara Menjalankan Aplikasi (Kompilasi dan Run)
+ Cara Menjalankan Aplikasi (Kompilasi dan Run)
 
 Pastikan **Java Development Kit (JDK)** sudah terinstal di sistem Anda.
 

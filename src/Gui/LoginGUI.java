@@ -1,48 +1,48 @@
 package src.Gui;
-import javax.swing.*;
 
+import javax.swing.*;
 import src.Main.*;
 import src.Model.*;
-import src.HandleException.*;
 import java.awt.*;
 
 public class LoginGUI extends JFrame {
 
-    //mengelola data user
     private UserManager userManager;
-    private Main mainApp; //login ke polling
+    private Main mainApp;
 
-    private JTextField voterIdField;
+    private JTextField idField;
     private JPasswordField passwordField;
+    private JComboBox<String> roleCombo;
     private JLabel statusLabel;
 
-    //konstruktor loginGUI
     public LoginGUI(UserManager manager, Main app) {
         this.userManager = manager;
         this.mainApp = app;
 
-        setTitle("Login");
-        setSize(400, 200);
+        setTitle("Login Sistem Polling");
+        setSize(420, 260);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
         initUI();
     }
 
-    //method untuk tampilan login
     private void initUI() {
-        JPanel center = new JPanel(new GridLayout(2, 2, 10, 10));
+        JPanel center = new JPanel(new GridLayout(4, 2, 10, 10));
         center.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
 
-        
-        center.add(new JLabel("ID Voter:"));
-        voterIdField = new JTextField();
-        center.add(voterIdField);
+        center.add(new JLabel("ID User:"));
+        idField = new JTextField();
+        center.add(idField);
 
         center.add(new JLabel("Password:"));
         passwordField = new JPasswordField();
         center.add(passwordField);
+
+        center.add(new JLabel("Role:"));
+        roleCombo = new JComboBox<>(new String[]{"Voter", "Admin"});
+        center.add(roleCombo);
 
         add(center, BorderLayout.CENTER);
 
@@ -51,32 +51,46 @@ public class LoginGUI extends JFrame {
         JButton registerBtn = new JButton("Register");
         bottom.add(loginBtn);
         bottom.add(registerBtn);
-
         add(bottom, BorderLayout.SOUTH);
 
         statusLabel = new JLabel(" ", SwingConstants.CENTER);
         add(statusLabel, BorderLayout.NORTH);
 
-        //aksi tombol login 
-        loginBtn.addActionListener(e -> {
-            String idVoter = voterIdField.getText().trim(); // nama lokal boleh
-            String password = new String(passwordField.getPassword());
+        loginBtn.addActionListener(e -> handleLogin());
 
-            User user = userManager.loginUser(idVoter, password);
-            if (user != null) {
-                mainApp.startPolling(user);
-                dispose();
-            } else {
-                
-                statusLabel.setText("Login gagal, ID Voter tidak terdaftar");
-            }
-        });
-
-        // aksi register ketika diklik
         registerBtn.addActionListener(e -> {
-            RegisterGUI reg = new RegisterGUI(userManager, mainApp);
-            reg.setVisible(true);
+            new RegisterGUI(userManager, mainApp).setVisible(true);
             dispose();
         });
+    }
+
+    private void handleLogin() {
+        String id = idField.getText().trim();
+        String password = new String(passwordField.getPassword());
+        String role = (String) roleCombo.getSelectedItem(); 
+
+        //LOGIN ADMIN
+        if (role.equals("Admin")) {
+            if (id.equals("ADM01") && password.equals("admin123")) {
+
+                User admin = new User("ADM01", "admin123", "Admin");
+                dispose(); // tutup login
+
+                new AdminGUI(admin, mainApp).setVisible(true);
+
+            } else {
+                statusLabel.setText("Login admin gagal!");
+            }
+            return;
+        }
+
+        //LOGIN VOTER
+        User voter = userManager.loginUser(id, password);
+        if (voter != null) {
+            mainApp.startPolling(voter);
+            dispose();
+        } else {
+            statusLabel.setText("Voter belum terdaftar!");
+        }
     }
 }

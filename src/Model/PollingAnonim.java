@@ -2,7 +2,6 @@ package src.Model;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-
 import src.HandleException.VoteGandaException;
 
 public class PollingAnonim extends Polling implements PollingInterface {
@@ -13,21 +12,20 @@ public class PollingAnonim extends Polling implements PollingInterface {
 
     @Override
     public void vote(String selectedOption, User user) throws VoteGandaException {
-
-        //Ccek vote ganda
+        // Cek vote ganda
         if (user.isHasVoted()) {
             throw new VoteGandaException("Anda sudah menggunakan hak pilih Anda.");
         }
 
-        //option tidak valid
+        // Option tidak valid
         if (!options.containsKey(selectedOption)) {
             throw new IllegalArgumentException("Pilihan tidak valid.");
         }
 
-        //Tmenambahkan suara
+        // Menambahkan suara
         options.put(selectedOption, options.get(selectedOption) + 1);
 
-        //tandai user
+        // Tandai user
         user.setHasVoted(true);
     }
 
