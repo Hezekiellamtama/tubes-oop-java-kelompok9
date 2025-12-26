@@ -10,12 +10,13 @@ public class RegisterGUI extends JFrame {
     private UserManager userManager;
     private Main mainApp;
 
-    private JTextField namaField;
-    private JTextField idVoterField;
-    private JTextField umurField;
-    private JPasswordField passwordField;
-    private JRadioButton lakiBtn, perempuanBtn;
+    private JTextField namaField; //nama voter
+    private JTextField idVoterField; //ID voter
+    private JTextField umurField; //umur voter
+    private JPasswordField passwordField; //password voter
+    private JRadioButton lakiBtn, perempuanBtn; //jenis kelamin
 
+    //konstruktur RegisterGUI
     public RegisterGUI(UserManager manager, Main app) {
         this.userManager = manager;
         this.mainApp = app;
@@ -29,22 +30,27 @@ public class RegisterGUI extends JFrame {
         initUI();
     }
 
+    //form registrasi voter
     private void initUI() {
         JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
 
+        //inisialisasi komponen form
         namaField = new JTextField();
         idVoterField = new JTextField();
         umurField = new JTextField();
         passwordField = new JPasswordField();
 
+        //radio button jenis kelamin
         lakiBtn = new JRadioButton("Laki-laki");
         perempuanBtn = new JRadioButton("Perempuan");
 
+        //radio button group agar hanya satu yang bisa dipilih
         ButtonGroup genderGroup = new ButtonGroup();
         genderGroup.add(lakiBtn);
         genderGroup.add(perempuanBtn);
 
+        //tambah komponen ke panel form
         formPanel.add(new JLabel("Nama:"));
         formPanel.add(namaField);
 
@@ -65,6 +71,7 @@ public class RegisterGUI extends JFrame {
 
         add(formPanel, BorderLayout.CENTER);
 
+        //panel tombol register & back
         JPanel buttonPanel = new JPanel();
         JButton registerBtn = new JButton("Register");
         JButton backBtn = new JButton("Back to Login");
@@ -74,7 +81,7 @@ public class RegisterGUI extends JFrame {
 
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // REGISTER VOTER
+        //event tombol register
         registerBtn.addActionListener(e -> {
             String idVoter = idVoterField.getText().trim();
             String password = new String(passwordField.getPassword()).trim();
@@ -89,7 +96,7 @@ public class RegisterGUI extends JFrame {
                 return;
             }
 
-            boolean success = userManager.registerUser(idVoter, password, "VOTER");
+            boolean success = userManager.registerUser(idVoter, password, "VOTER"); //proses registrasi voter
 
             if (success) {
                 JOptionPane.showMessageDialog(
@@ -110,9 +117,10 @@ public class RegisterGUI extends JFrame {
             }
         });
 
+        //event tombol back ke login
         backBtn.addActionListener(e -> {
             new LoginGUI(userManager, mainApp).setVisible(true);
-            dispose();
+            dispose(); //tutup RegisterGUI
         });
     }
 }

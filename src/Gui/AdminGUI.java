@@ -28,47 +28,40 @@ public class AdminGUI extends JFrame {
     private void initUI() {
         setLayout(new BorderLayout(10, 10));
 
-        // Header
+        // HEADER
         JPanel headerPanel = new JPanel(new BorderLayout());
         JLabel titleLabel = new JLabel("PANEL ADMINISTRATOR", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         titleLabel.setForeground(Color.BLACK);
         
-        JLabel infoLabel = new JLabel();
-        infoLabel.setFont(new Font("Arial", Font.PLAIN, 12));
-        infoLabel.setForeground(Color.GRAY);
-        
         headerPanel.add(titleLabel, BorderLayout.CENTER);
-        headerPanel.add(infoLabel, BorderLayout.SOUTH);
         add(headerPanel, BorderLayout.NORTH);
 
-        // Panel tombol utama (Pertanyaan dan Hasil)
+        // 2 TOMBOL UTAMA
         JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 15, 15));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(30, 60, 30, 60));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(40, 80, 40, 80));
 
-        // Tombol 1: Buat Polling (Pertanyaan)
+        // Tombol 1: Buat Polling
         JButton buatPollingBtn = new JButton("BUAT POLLING BARU");
-        styleBigButton(buatPollingBtn, Color.BLUE);
-        buatPollingBtn.addActionListener(e -> showBuatPollingForm());
-
-        // Tombol 2: Hasil Voting
-        JButton hasilVotingBtn = new JButton("LIHAT HASIL VOTING");
-        styleBigButton(hasilVotingBtn, Color.GREEN.darker());
-        hasilVotingBtn.addActionListener(e -> showHasilVoting());
+        styleBigButton(buatPollingBtn, new Color(52, 152, 219));
+        
+        // Tombol 2: Hasil Voting (dengan reset di dalamnya)
+        JButton hasilVotingBtn = new JButton("HASIL VOTING");
+        styleBigButton(hasilVotingBtn, new Color(46, 204, 113));
 
         buttonPanel.add(buatPollingBtn);
         buttonPanel.add(hasilVotingBtn);
-
         add(buttonPanel, BorderLayout.CENTER);
 
-        // Status polling
-        JPanel statusPanel = new JPanel();
-        updateStatusLabel(statusPanel);
-        add(statusPanel, BorderLayout.SOUTH);
+        // Action listeners
+        buatPollingBtn.addActionListener(e -> showBuatPollingForm());
+        hasilVotingBtn.addActionListener(e -> showHasilVoting());
 
-        // Tombol logout
+        // TOMBOL LOGOUT
         JPanel logoutPanel = new JPanel();
         JButton logoutBtn = new JButton("Logout");
+        logoutBtn.setBackground(Color.GRAY);
+        logoutBtn.setForeground(Color.WHITE);
         logoutBtn.addActionListener(e -> {
             mainApp.showLogin();
             dispose();
@@ -83,20 +76,7 @@ public class AdminGUI extends JFrame {
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createRaisedBevelBorder());
-        button.setPreferredSize(new Dimension(300, 60));
-    }
-
-    private void updateStatusLabel(JPanel panel) {
-        panel.removeAll();
-        int totalPolling = mainApp.getPollingList().size();
-        
-        JLabel statusLabel = new JLabel("Total Polling Aktif: " + totalPolling);
-        statusLabel.setFont(new Font("Arial", Font.BOLD, 12));
-        statusLabel.setForeground(totalPolling > 0 ? Color.GREEN : Color.RED);
-        
-        panel.add(statusLabel);
-        panel.revalidate();
-        panel.repaint();
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     private void showBuatPollingForm() {
@@ -152,12 +132,12 @@ public class AdminGUI extends JFrame {
 
         // Panel tombol aksi
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        JButton simpanBtn = new JButton("SIMPAN POLLING");
-        simpanBtn.setBackground(Color.BLUE);
+        JButton simpanBtn = new JButton("💾 SIMPAN POLLING");
+        simpanBtn.setBackground(new Color(52, 152, 219));
         simpanBtn.setForeground(Color.WHITE);
         
-        JButton batalBtn = new JButton("BATAL");
-        batalBtn.setBackground(Color.RED);
+        JButton batalBtn = new JButton("❌ BATAL");
+        batalBtn.setBackground(new Color(231, 76, 60));
         batalBtn.setForeground(Color.WHITE);
         
         actionPanel.add(simpanBtn);
@@ -194,24 +174,18 @@ public class AdminGUI extends JFrame {
                 return;
             }
             
-            // Konversi ke List
             List<String> pilihanListData = new ArrayList<>();
             for (int i = 0; i < pilihanModel.size(); i++) {
                 pilihanListData.add(pilihanModel.get(i));
             }
             
-            // Buat polling baru
             PollingInterface pollingBaru = new PollingAnonim(pertanyaan, pilihanListData);
             mainApp.addPolling(pollingBaru);
-            
-            // Update status
-            updateStatusLabel((JPanel) this.getContentPane().getComponent(2));
             
             JOptionPane.showMessageDialog(dialog, 
                 "POLLING BERHASIL DIBUAT!\n\n" +
                 "Pertanyaan: " + pertanyaan + "\n" +
-                "Jumlah pilihan: " + pilihanListData.size() + "\n" +
-                "Sekarang voter dapat menjawab polling ini.",
+                "Jumlah pilihan: " + pilihanListData.size(),
                 "Sukses", 
                 JOptionPane.INFORMATION_MESSAGE);
             
@@ -229,7 +203,7 @@ public class AdminGUI extends JFrame {
         dialog.setLocationRelativeTo(this);
         dialog.setLayout(new BorderLayout());
 
-        // Tabbed pane untuk 2 jenis hasil
+        // TABBED PANE
         JTabbedPane tabbedPane = new JTabbedPane();
 
         // TAB 1: Hasil per Polling
@@ -243,25 +217,25 @@ public class AdminGUI extends JFrame {
         List<PollingInterface> pollingList = mainApp.getPollingList();
         
         StringBuilder sb1 = new StringBuilder();
-        sb1.append("                                   \n");
+        sb1.append("\n");
         sb1.append("HASIL POLLING\n");
-        sb1.append("                                    \n\n");
+        sb1.append("\n\n");
         
         if (pollingList.isEmpty()) {
             sb1.append("Belum ada polling yang dibuat.\n");
         } else {
             for (int i = 0; i < pollingList.size(); i++) {
                 PollingInterface polling = pollingList.get(i);
-                sb1.append("POLLING ").append(i + 1).append("\n");
+                sb1.append("POLLING #").append(i + 1).append("\n");
                 sb1.append("Pertanyaan: ").append(polling.getQuestion()).append("\n");
                 sb1.append(polling.tampilkanHasil()).append("\n");
-                sb1.append("                                    \n\n");
+                sb1.append("\n\n");
             }
         }
         
         pollingResultsArea.setText(sb1.toString());
         pollingResultsPanel.add(new JScrollPane(pollingResultsArea), BorderLayout.CENTER);
-        tabbedPane.addTab(" Hasil Polling", pollingResultsPanel);
+        tabbedPane.addTab("📊 Hasil Polling", pollingResultsPanel);
 
         // TAB 2: Hasil per User
         JPanel userResultsPanel = new JPanel(new BorderLayout());
@@ -274,9 +248,9 @@ public class AdminGUI extends JFrame {
         Map<String, Map<String, String>> allVotes = mainApp.getAllUserVotes();
         
         StringBuilder sb2 = new StringBuilder();
-        sb2.append("     \n");
+        sb2.append("\n");
         sb2.append("HASIL VOTING PER USER\n");
-        sb2.append(" \n\n");
+        sb2.append("\n\n");
         
         if (allVotes.isEmpty()) {
             sb2.append("Belum ada user yang melakukan voting.\n");
@@ -288,30 +262,75 @@ public class AdminGUI extends JFrame {
                 String username = userEntry.getKey();
                 Map<String, String> userVotes = userEntry.getValue();
                 
-                sb2.append("USER ").append(userCount).append(": ").append(username).append("\n");
+                sb2.append("USER #").append(userCount).append(": ").append(username).append("\n");
                 sb2.append("Total menjawab: ").append(userVotes.size()).append(" polling\n");
                 
                 for (Map.Entry<String, String> voteEntry : userVotes.entrySet()) {
                     sb2.append("  • ").append(voteEntry.getKey())
                        .append(" → ").append(voteEntry.getValue()).append("\n");
                 }
-                sb2.append(" \n\n");
+                sb2.append("\n\n");
                 userCount++;
             }
         }
         
         userResultsArea.setText(sb2.toString());
         userResultsPanel.add(new JScrollPane(userResultsArea), BorderLayout.CENTER);
-        tabbedPane.addTab(" Hasil per User", userResultsPanel);
+        tabbedPane.addTab("👥 Hasil per User", userResultsPanel);
 
         dialog.add(tabbedPane, BorderLayout.CENTER);
 
-        // Tombol tutup
-        JPanel closePanel = new JPanel();
-        JButton closeBtn = new JButton("Tutup");
+        // PANEL TOMBOL DENGAN RESET
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        
+        // TOMBOL RESET SEMUA VOTING
+        JButton resetBtn = new JButton("🔄 RESET SEMUA VOTING");
+        resetBtn.setBackground(new Color(231, 76, 60));
+        resetBtn.setForeground(Color.WHITE);
+        resetBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        
+        // TOMBOL TUTUP
+        JButton closeBtn = new JButton("TUTUP");
+        closeBtn.setBackground(new Color(52, 152, 219));
+        closeBtn.setForeground(Color.WHITE);
+        closeBtn.setFont(new Font("Arial", Font.BOLD, 12));
+
+        buttonPanel.add(resetBtn);
+        buttonPanel.add(closeBtn);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        // ACTION LISTENER UNTUK RESET
+        resetBtn.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(
+                dialog,
+                "⚠️  KONFIRMASI RESET SEMUA VOTING\n\n" +
+                "Tindakan ini akan menghapus:\n" +
+                "• Semua jawaban user\n" +
+                "• Data tidak dapat dikembalikan\n\n" +
+                "Yakin ingin reset semua voting?",
+                "Konfirmasi Reset",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+            
+            if (confirm == JOptionPane.YES_OPTION) {
+                mainApp.resetAllVotes();
+                
+                JOptionPane.showMessageDialog(
+                    dialog,
+                    "✅ RESET BERHASIL!\n\n" +
+                    "Semua voting telah direset.\n" +
+                    "User dapat mulai voting dari awal.",
+                    "Reset Selesai",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+                
+                dialog.dispose();
+                showHasilVoting();
+            }
+        });
+
         closeBtn.addActionListener(e -> dialog.dispose());
-        closePanel.add(closeBtn);
-        dialog.add(closePanel, BorderLayout.SOUTH);
 
         dialog.setVisible(true);
     }

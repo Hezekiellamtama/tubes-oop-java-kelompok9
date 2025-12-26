@@ -1,8 +1,9 @@
 package src.Gui;
+// Halaman utama untuk user memilih dan mengirimkan jawaban polling
 
 import javax.swing.*;
 import src.HandleException.VoteGandaException;
-import src.Main.*;
+import src.Main.Main;
 import src.Model.*;
 import java.awt.*;
 import java.util.Map;
@@ -16,7 +17,6 @@ public class PollingGUI extends JFrame {
     private JRadioButton[] voteButtons;
     private JButton voteButton;
     private JButton backButton;
-
     private JTextArea hasilArea;
 
     public PollingGUI(Main app, User user, PollingInterface polling) {
@@ -37,21 +37,20 @@ public class PollingGUI extends JFrame {
     }
 
     private void initUI() {
-        // Header dengan pertanyaan dari admin
+        // HEADER
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
+
         JLabel questionLabel = new JLabel(
-            "<html><div style='text-align:center;'><b>PERTANYAAN:</b><br>" + 
-            polling.getQuestion() + "</div></html>",
+            "<html><div style='text-align:center;'><b>PERTANYAAN:</b><br>"
+            + polling.getQuestion() + "</div></html>",
             SwingConstants.CENTER
         );
         questionLabel.setFont(new Font("Arial", Font.BOLD, 14));
         headerPanel.add(questionLabel, BorderLayout.CENTER);
-        
         add(headerPanel, BorderLayout.NORTH);
 
-        // Panel pilihan jawaban
+        // PANEL PILIHAN VOTING
         JPanel votePanel = new JPanel();
         votePanel.setLayout(new BoxLayout(votePanel, BoxLayout.Y_AXIS));
         votePanel.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
@@ -73,16 +72,15 @@ public class PollingGUI extends JFrame {
 
         add(new JScrollPane(votePanel), BorderLayout.CENTER);
 
-        // Panel bawah dengan tombol submit
+        // PANEL BAWAH
         JPanel bottomPanel = new JPanel(new BorderLayout());
 
-        // Panel tombol
         JPanel buttonPanel = new JPanel();
         voteButton = new JButton("KIRIM JAWABAN");
         voteButton.setBackground(Color.GREEN);
         voteButton.setForeground(Color.WHITE);
         voteButton.setFont(new Font("Arial", Font.BOLD, 14));
-        
+
         backButton = new JButton("Kembali");
         backButton.setBackground(Color.GRAY);
         backButton.setForeground(Color.WHITE);
@@ -91,31 +89,36 @@ public class PollingGUI extends JFrame {
         buttonPanel.add(backButton);
         bottomPanel.add(buttonPanel, BorderLayout.NORTH);
 
-        // Area informasi
         hasilArea = new JTextArea(4, 30);
         hasilArea.setEditable(false);
         hasilArea.setFont(new Font("Arial", Font.PLAIN, 11));
-        hasilArea.setText("Silakan pilih salah satu jawaban di atas,\n" +
-                         "kemudian klik 'KIRIM JAWABAN'.");
-        
+
         bottomPanel.add(new JScrollPane(hasilArea), BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
 
-        // CEK: Gunakan Main untuk tracking, bukan User
+        // CEK JIKA USER SUDAH VOTING
         if (mainApp.hasUserVoted(currentUser.getUsername(), polling.getQuestion())) {
-            voteButton.setEnabled(false);
-            voteButton.setText("Sudah Dijawab");
-            voteButton.setBackground(Color.GRAY);
-            
-            String userChoice = mainApp.getUserVote(currentUser.getUsername(), polling.getQuestion());
-            hasilArea.setText("Anda sudah menjawab polling ini.\n" +
-                            "Jawaban Anda: " + userChoice + "\n\n" +
-                            polling.tampilkanHasil());
+            String userChoice = mainApp.getUserVote(
+                    currentUser.getUsername(),
+                    polling.getQuestion()
+            );
+
+            hasilArea.setText(
+                "Anda sudah menjawab polling ini.\n" +
+                "Jawaban Anda: " + userChoice + "\n\n" +
+                polling.tampilkanHasil()
+            );
+        } else {
+            hasilArea.setText(
+                "Silakan pilih salah satu jawaban di atas,\n" +
+                "kemudian klik 'KIRIM JAWABAN'."
+            );
         }
     }
 
     private void initListener() {
-        // Submit vote
+
+        // AKSI TOMBOL VOTE
         voteButton.addActionListener(e -> {
             String selected = null;
 
@@ -127,51 +130,58 @@ public class PollingGUI extends JFrame {
             }
 
             if (selected == null) {
-                JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(
+                        this,
                         "Pilih salah satu jawaban!",
                         "Perhatian",
-                        JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.WARNING_MESSAGE
+                );
                 return;
             }
 
             try {
-                // Cek dulu apakah sudah vote (via Main)
-                if (mainApp.hasUserVoted(currentUser.getUsername(), polling.getQuestion())) {
-                    throw new VoteGandaException("Anda sudah menjawab polling ini!");
+                // CEK VOTE GANDA
+                if (mainApp.hasUserVoted(
+                        currentUser.getUsername(),
+                        polling.getQuestion())) {
+                    throw new VoteGandaException(null);
                 }
-                
-                // Vote via polling
-                polling.vote(selected, currentUser);
-                
-                // Simpan voting dan tracking di Main
-                mainApp.saveUserVote(currentUser.getUsername(), polling.getQuestion(), selected);
-                
-                // Update UI
-                voteButton.setEnabled(false);
-                voteButton.setText("Sudah Dijawab");
-                voteButton.setBackground(Color.GRAY);
 
-                JOptionPane.showMessageDialog(this,
+                // PROSES VOTING
+                polling.vote(selected, currentUser);
+                mainApp.saveUserVote(
+                        currentUser.getUsername(),
+                        polling.getQuestion(),
+                        selected
+                );
+
+                JOptionPane.showMessageDialog(
+                        this,
                         "JAWABAN TERKIRIM\n\n" +
                         "Pertanyaan: " + polling.getQuestion() + "\n" +
                         "Jawaban Anda: " + selected,
                         "Sukses",
-                        JOptionPane.INFORMATION_MESSAGE);
-                
-                // Update hasil area
-                hasilArea.setText("Terima kasih telah menjawab!\n" +
-                                "Jawaban Anda: " + selected + "\n\n" +
-                                polling.tampilkanHasil());
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+                hasilArea.setText(
+                    "Terima kasih telah menjawab!\n" +
+                    "Jawaban Anda: " + selected + "\n\n" +
+                    polling.tampilkanHasil()
+                );
 
             } catch (VoteGandaException ex) {
-                JOptionPane.showMessageDialog(this,
+                // PESAN DIAMBIL LANGSUNG DARI HANDLE EXCEPTION
+                JOptionPane.showMessageDialog(
+                        this,
                         ex.getMessage(),
                         "Peringatan",
-                        JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.WARNING_MESSAGE
+                );
             }
         });
 
-        // Tombol kembali
+        // TOMBOL KEMBALI
         backButton.addActionListener(e -> {
             new UserPollingMenu(currentUser, mainApp).setVisible(true);
             dispose();
