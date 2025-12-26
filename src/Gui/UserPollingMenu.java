@@ -1,5 +1,5 @@
 package src.Gui;
-
+//Menu utama voter untuk melihat daftar polling
 import javax.swing.*;
 import src.Main.Main;
 import src.Model.*;
@@ -24,9 +24,11 @@ public class UserPollingMenu extends JFrame {
         initUI();
     }
 
+    //inisialisasi UI
     private void initUI() {
         setLayout(new BorderLayout(10, 10));
 
+        //header
         JLabel title = new JLabel(
                 "Selamat Datang " + user.getUsername(),
                 SwingConstants.CENTER
@@ -34,15 +36,17 @@ public class UserPollingMenu extends JFrame {
         title.setFont(new Font("Arial", Font.BOLD, 16));
         add(title, BorderLayout.NORTH);
 
-        // Panel daftar polling
+        //panel daftar polling
         JPanel pollingPanel = new JPanel();
         pollingPanel.setLayout(new BoxLayout(pollingPanel, BoxLayout.Y_AXIS));
         pollingPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
+        //ambil daftar polling dari mainApp
         List<PollingInterface> pollingList = mainApp.getPollingList();
 
         for (PollingInterface polling : pollingList) {
 
+            //container satu polling item
             JPanel pollItemPanel = new JPanel(new BorderLayout(10, 0));
             pollItemPanel.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(Color.LIGHT_GRAY),
@@ -50,34 +54,31 @@ public class UserPollingMenu extends JFrame {
             ));
             pollItemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
 
+            //judul polling
             JLabel pollTitle = new JLabel("<html><b>" + polling.getQuestion() + "</b></html>");
 
+            //cek apakah user sudah voting
             boolean sudahVote = mainApp.hasUserVoted(
                     user.getUsername(),
                     polling.getQuestion()
             );
 
+            //status voting
             String statusText = sudahVote ? "Sudah Dijawab" : "○ Belum Dijawab";
             JLabel statusLabel = new JLabel(statusText);
             statusLabel.setForeground(sudahVote ? new Color(0, 150, 0) : Color.RED);
 
-            JButton actionButton;
-            if (sudahVote) {
-                actionButton = new JButton("Lihat Hasil");
-                actionButton.addActionListener(e -> showPollingResults(polling));
-            } else {
-                actionButton = new JButton("Jawab Polling");
-                actionButton.addActionListener(e -> openPolling(polling));
-            }
+           JButton actionButton = new JButton("Jawab Polling");
+actionButton.addActionListener(e -> openPolling(polling));
 
-            // Panel kiri (judul + status)
+            //panel kiri (judul + status)
             JPanel leftPanel = new JPanel();
             leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
             leftPanel.add(pollTitle);
             leftPanel.add(Box.createVerticalStrut(4));
             leftPanel.add(statusLabel);
 
-            // Panel kanan (tombol di tengah)
+            //panel kanan (tombol di tengah)
             JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
             rightPanel.setPreferredSize(new Dimension(130, 50));
             rightPanel.add(actionButton);
@@ -108,12 +109,13 @@ public class UserPollingMenu extends JFrame {
             dispose();
         });
     }
-
+    //membuka halaman polling untuk menjawab
     private void openPolling(PollingInterface polling) {
         new PollingGUI(mainApp, user, polling).setVisible(true);
         dispose();
     }
 
+    //menampilkan hasil polling
     private void showPollingResults(PollingInterface polling) {
         JTextArea textArea = new JTextArea(polling.tampilkanHasil());
         textArea.setEditable(false);
@@ -138,6 +140,7 @@ public class UserPollingMenu extends JFrame {
         );
     }
 
+    //menampilkan semua hasil voting yang telah dilakukan user
     private void showAllMyResults() {
         Map<String, String> myVotes = mainApp.getUserVotes(user.getUsername());
 
