@@ -1,7 +1,7 @@
 package src.Model;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
+import java.util.ArrayList;
 import src.HandleException.VoteGandaException;
 
 public class PollingAnonim extends Polling implements PollingInterface {
@@ -12,35 +12,27 @@ public class PollingAnonim extends Polling implements PollingInterface {
 
     @Override
     public void vote(String selectedOption, User user) throws VoteGandaException {
-        // Cek vote ganda
-        if (user.isHasVoted()) {
-            throw new VoteGandaException("Anda sudah menggunakan hak pilih Anda.");
-        }
-
         // Option tidak valid
         if (!options.containsKey(selectedOption)) {
             throw new IllegalArgumentException("Pilihan tidak valid.");
         }
-
-        // Menambahkan suara
+        // Tambahkan suara
         options.put(selectedOption, options.get(selectedOption) + 1);
-
-        // Tandai user
-        user.setHasVoted(true);
     }
 
     @Override
     public String tampilkanHasil() {
         StringBuilder sb = new StringBuilder();
-        sb.append("===== HASIL POLLING ANONIM =====\n");
 
-        int total = options.values()
+        //hitung total suara
+        int total = options.values() 
                            .stream()
                            .mapToInt(Integer::intValue)
                            .sum();
 
         sb.append("Total Suara: ").append(total).append("\n");
 
+        //tampilkan hasil per pilihan
         for (Map.Entry<String, Integer> entry : options.entrySet()) {
             double persentase = total > 0
                     ? ((double) entry.getValue() / total) * 100
@@ -58,7 +50,7 @@ public class PollingAnonim extends Polling implements PollingInterface {
 
     @Override
     public Map<String, Integer> getOptions() {
-        return this.options; 
+        return this.options;
     }
 
     @Override

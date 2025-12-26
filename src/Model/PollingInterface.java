@@ -1,14 +1,14 @@
 package src.Model;
-import java.util.Map;
 
 import src.HandleException.VoteGandaException;
+import java.util.List;
+import java.util.Map;
 
 public interface PollingInterface {
-    
-
-    void vote(String selectedOption, User user) throws VoteGandaException; // TAMBAHKAN User user
-    
-    String tampilkanHasil();
-    String getQuestion();
-    Map<String, Integer> getOptions();
+    String getQuestion(); //menampung pertanyaan polling
+    void vote(String choice, User user) throws VoteGandaException; 
+    String tampilkanHasil(); //menampilkan hasil polling
+    Map<String, Integer> getOptions(); 
+    List<String> getPilihanList();
+    void resetVotes();  //method untuk mereset vote pada polling
 }

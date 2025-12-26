@@ -1,9 +1,8 @@
 package src.Main;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 import src.Model.*;
 import src.Gui.*;
-import src.HandleException.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,8 +10,13 @@ import java.util.Map;
 
 public class Main {
 
+    // Daftar semua polling
     private List<PollingInterface> pollingList;
-    private Map<String, Map<String, String>> userVotes; // username -> (pollTitle -> choice)
+
+    // Menyimpan voting user
+    // username -> (pollingQuestion -> jawaban)
+    private Map<String, Map<String, String>> userVotes;
+
     private UserManager userManager;
 
     public Main() {
@@ -25,23 +29,23 @@ public class Main {
         showLogin();
     }
 
+    // Arahkan user sesuai role
     public void startPolling(User user) {
-        if (user.getRole().equals("ADMIN")) {
-            // Admin masuk ke dashboard admin
+        if (user.getRole().equalsIgnoreCase("ADMIN")) {
             new AdminGUI(user, this).setVisible(true);
         } else {
-            // Voter masuk ke menu pemilihan polling
             new UserPollingMenu(user, this).setVisible(true);
         }
     }
 
+    // Tampilkan halaman login
     public void showLogin() {
         SwingUtilities.invokeLater(() -> {
             new LoginGUI(userManager, this).setVisible(true);
         });
     }
 
-    // Getter dan setter
+
     public List<PollingInterface> getPollingList() {
         return pollingList;
     }
@@ -50,35 +54,45 @@ public class Main {
         pollingList.add(polling);
     }
 
-    // Method untuk menyimpan hasil voting user
-    public void saveUserVote(String username, String pollTitle, String choice) {
+    // Simpan vote user (1 polling = 1 vote)
+    public void saveUserVote(String username, String pollQuestion, String choice) {
+        userVotes.putIfAbsent(username, new HashMap<>());
+        userVotes.get(username).put(pollQuestion, choice);
+    }
+
+    // Cek apakah user sudah vote polling tertentu
+    public boolean hasUserVoted(String username, String pollQuestion) {
+        return userVotes.containsKey(username)
+                && userVotes.get(username).containsKey(pollQuestion);
+    }
+
+    // Ambil jawaban user untuk polling tertentu
+    public String getUserVote(String username, String pollQuestion) {
         if (!userVotes.containsKey(username)) {
-            userVotes.put(username, new HashMap<>());
+            return null;
         }
-        userVotes.get(username).put(pollTitle, choice);
+        return userVotes.get(username).get(pollQuestion);
     }
 
-    // Method untuk mendapatkan hasil voting semua user
-    public Map<String, Map<String, String>> getAllUserVotes() {
-        return userVotes;
-    }
-
-    // Method untuk mendapatkan voting user tertentu untuk polling tertentu
-    public String getUserVote(String username, String pollTitle) {
-        if (userVotes.containsKey(username)) {
-            return userVotes.get(username).get(pollTitle);
-        }
-        return null;
-    }
-
-    // Method untuk mendapatkan semua voting user tertentu
+    // Ambil semua voting milik user
     public Map<String, String> getUserVotes(String username) {
         return userVotes.getOrDefault(username, new HashMap<>());
     }
 
-    // Method untuk mengecek apakah user sudah vote di polling tertentu
-    public boolean hasUserVoted(String username, String pollTitle) {
-        return getUserVote(username, pollTitle) != null;
+    // Ambil semua voting seluruh user (untuk admin)
+    public Map<String, Map<String, String>> getAllUserVotes() {
+        return userVotes;
+    }
+
+    // Reset semua voting (untuk admin)
+    public void resetAllVotes() {
+        // 1. Reset semua voting user
+        userVotes.clear();
+        
+        // 2. Reset voting di setiap polling
+        for (PollingInterface polling : pollingList) {
+            polling.resetVotes();  // Panggil method reset di setiap polling
+        }
     }
 
     public static void main(String[] args) {
