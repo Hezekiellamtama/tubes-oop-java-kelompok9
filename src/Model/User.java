@@ -4,38 +4,37 @@ public class User {
 
     private String username;
     private String password;
-    private String role; // ADMIN / VOTER
-    private boolean hasVoted;
+    private String role; 
+    private boolean hasVoted; //menandai apakah user sudah voting atau belum
 
     public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
         this.role = role;
-        this.hasVoted = false;
+        this.hasVoted = false; //default belum voting
     }
 
-    // constructor lama (biar tidak error di kode lain)
-    public User(String username, String password) {
+    public User(String username, String password) { //default role VOTER
         this(username, password, "VOTER");
     }
 
-    public String getUsername() {
+    public String getUsername() { //mengambil username
         return username;
     }
 
-    public String getPassword() {
+    public String getPassword() { //mengambil password
         return password;
     }
 
-    public String getRole() {
+    public String getRole() { //mengambil role
         return role;
     }
 
-    public boolean isHasVoted() {
-        return hasVoted;
+    public boolean isHasVoted() { //cek status voting
+        return hasVoted; //mengembalikan status apakah user sudah voting atau belum
     }
 
-    public void setHasVoted(boolean hasVoted) {
-        this.hasVoted = hasVoted;
+    public void setHasVoted(boolean hasVoted) { //set status voting
+        this.hasVoted = hasVoted; //mengatur status apakah user sudah voting atau belum
     }
 }
